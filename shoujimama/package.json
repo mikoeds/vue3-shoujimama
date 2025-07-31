@@ -1,0 +1,47 @@
+{
+  "name": "shoujimama",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@types/node": "^24.1.0",
+    "@types/vue-router": "^2.0.0",
+    "axios": "^1.11.0",
+    "element-plus": "^2.10.4",
+    "eslint-plugin-vue": "^10.4.0",
+    "globals": "^16.3.0",
+    "pinia": "^3.0.3",
+    "sass": "^1.89.2",
+    "typescript-eslint": "^8.38.0",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-icons": "^22.2.0",
+    "unplugin-vue-components": "^28.8.0",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue": "^3.5.13",
+    "vue-draggable-next": "^2.2.1",
+    "vue-router": "^4.5.1",
+    "vue3-print-nb": "^0.1.4",
+    "wangeditor": "^4.7.15"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.32.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vue-tsc": "^2.2.12"
+  },
+  "description": "This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
