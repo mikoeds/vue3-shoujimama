@@ -59,5 +59,6 @@ export default defineConfig({
       "@": resolve(__dirname, "src")
     },
     extensions: [".ts", ".vue", ".js"]
-  }
+  },
+
 })

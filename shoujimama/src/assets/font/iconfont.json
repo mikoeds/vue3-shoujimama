@@ -1,0 +1,44 @@
+{
+  "id": "2103254",
+  "name": "得惠后台管理系统",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "17754729",
+      "name": "订单",
+      "font_class": "dingdan",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "17754730",
+      "name": "积分兑换订单",
+      "font_class": "jifenduihuandingdan",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "17754731",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "17754732",
+      "name": "充值金额",
+      "font_class": "chongzhijine",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "17754733",
+      "name": "寄拍订单",
+      "font_class": "jipaidingdan",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    }
+  ]
+}
