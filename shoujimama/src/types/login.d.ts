@@ -9,3 +9,11 @@ export interface loginResultType {
     accessToken: string;
     refreshToken: string;
 }
+
+export interface refreshTokenType {
+  accessToken: string;
+  refreshToken: string;
+}
+export interface refreshParamType {
+  refreshToken: string;
+}

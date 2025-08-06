@@ -25,6 +25,7 @@
 <style scoped>
 .main {
     border-bottom: 2px solid #e2dddd;
+    width: 100%;
 }
 
 .leftPart {

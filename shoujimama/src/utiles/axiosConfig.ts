@@ -1,5 +1,8 @@
 import axios, { type AxiosResponse, type AxiosStatic, type InternalAxiosRequestConfig } from "axios"
 import { AUTHORIZATION, WHITE_LIST } from "./config"
+import { ref } from "vue";
+import { refreshToken } from "./api/login";
+import type { refreshParamType, refreshTokenType } from "../types/login";
 
 export const axiosConfig = () => {
     axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -47,7 +50,7 @@ function handleAxiosRequestInterceptors(axios: AxiosStatic) {
     )
 };
 function handleAxiosResponseInterceptors(axios: AxiosStatic) {
-    axios.interceptors.response.use((response: AxiosResponse) => {
+    axios.interceptors.response.use(async (response: AxiosResponse) => {
         if (!response.config.method || !response.config.url) {
             return response
         }
@@ -57,8 +60,20 @@ function handleAxiosResponseInterceptors(axios: AxiosStatic) {
             requestMap.delete(key)
         }
         // 返回code处理
+        // Token过期处理
+        let refreshing = false
+        const refreshParam = {
+            refreshToken: ""
+        }
         if (response.data.status === 2) {
-            
+            if (!refreshing) {
+                refreshParam.refreshToken = localStorage.getItem("refreshToken") || ""
+                refreshing = true;
+                await refreshToken<refreshTokenType, refreshParamType>(refreshParam)
+                .then((response)=>{
+                    console.log(response);
+                })
+            }
         }
         // 错误处理
         return response

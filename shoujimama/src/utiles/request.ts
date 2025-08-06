@@ -1,18 +1,17 @@
 import axios from "axios"
 import type { requestResult } from "../types/request"
-import { ElMain, ElMessage } from "element-plus"
 
 /**
  * GET公共请求
  * @param {*} url 请求地址
  * @param {*} params 请求参数
  */
-export const getRequest = <T, D = undefined>(url: string, params?: D) => {
+export const getRequest = <T, D = undefined>(url: string, parmas?: D) => {
     return new Promise<requestResult<T>>((resolve, reject) => {
         axios({
             method: "GET",
             url,
-            params: params || {}
+            params: parmas || {}
         }).then((response) => {
             console.log(response);
             

@@ -12,16 +12,23 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/',
-        name: '',
-        redirect: "/home",
+        component: () => import('../views/home.vue'),
+        redirect: "/dashboard",
         children: [{
-            path: 'home',
-            name: 'home',
-            component: () => import('../views/home.vue'),
+            path: 'dashboard',
+            name: 'dashboard',
+            component: () => import('../views/dashBoard.vue'),
             meta: {
                 title: '主页'
             },
-            children: []
+        },
+        {
+            path: 'categoriesInfo',
+            name: 'categoriesInfo',
+            component: () => import('../views/home.vue'),
+            meta: {
+                title: '分类管理'
+            },
         },
         ]
     },

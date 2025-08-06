@@ -7,12 +7,14 @@ import { axiosConfig } from './utiles/axiosConfig'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import router from './router/index'
 import routerConfig from './utiles/routerConfig'
+import {createPinia} from 'pinia'
 
-const app = createApp(App)
-axiosConfig()
-routerConfig()
+const pinia = createPinia();
+const app = createApp(App);
+axiosConfig();
+routerConfig();
 
-app.use(router).use(ElementPlus, { size: "default", locale: zhCn });
+app.use(router).use(pinia).use(ElementPlus, { size: "default", locale: zhCn });
 app.mount('#app')
 
 for (const [key, icon] of Object.entries(elPluseIcons)) {

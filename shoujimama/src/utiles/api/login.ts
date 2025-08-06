@@ -7,6 +7,9 @@ export const postLogin = <T, D>(data: D): Promise<requestResult<T>> => {
     return pustRequest(url + "/login", data, "post");
 }
 // 刷新token
+export const refreshToken = <T, D>(data: D): Promise<requestResult<T>> => {
+    return pustRequest(url + "/refresh-login", data, "post")
+}
 
 // 获取验证码
 export const getLoginCode = <T, D>(data: D): Promise<requestResult<T>> => {
