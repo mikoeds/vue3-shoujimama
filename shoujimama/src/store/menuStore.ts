@@ -4,6 +4,7 @@ import type { menuInfoType } from '../types/menu'
 import { reactive } from 'vue'
 
 export const useMenuStore = defineStore("menu", () => {
+    
     let menuList = reactive<Array<menuInfoType>>([])
 
     const getMenuInfo = async() => {

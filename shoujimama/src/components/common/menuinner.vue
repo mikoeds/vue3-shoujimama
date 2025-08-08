@@ -9,7 +9,7 @@ defineProps({
 <template>
     <template v-for="item in data">
         <template v-if="item.type === 1">
-            <el-sub-menu :index="item.path" :key="item.id">
+            <el-sub-menu :index="item.path" :key="item.id" :title="item.title">
                 <menuinner :data="item.items"></menuinner>
                 <template #title>
                     <span>{{ item.title }}</span>

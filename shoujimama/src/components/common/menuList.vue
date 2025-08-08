@@ -7,6 +7,9 @@ const menuStore = useMenuStore()
 const handleGetMenuList = async () => {
     await menuStore.getMenuInfo()
 }
+const handleSelectRout = (index:string) => {
+    
+}
 
 onMounted(() => {
     handleGetMenuList()
@@ -15,7 +18,7 @@ onMounted(() => {
 
 <template>
     <div class="main">
-        <el-menu unique-opened router max-height="600px">
+        <el-menu unique-opened router max-height="600px" @select="handleSelectRout">
             <menuinner :data="menuStore.menuList"></menuinner>
         </el-menu>
     </div>

@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { useTagStore } from '../store/tagStore';
 
+const tagStore = useTagStore()
+onMounted(() => {
+    
+})
 </script>
 
 <template>
@@ -17,5 +23,4 @@
     margin: 20px;
     min-width: 100px;
 }
-
 </style>

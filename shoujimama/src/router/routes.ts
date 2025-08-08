@@ -25,7 +25,7 @@ export const routes: Array<RouteRecordRaw> = [
         {
             path: 'categoriesInfo',
             name: 'categoriesInfo',
-            component: () => import('../views/home.vue'),
+            component: () => import('../views/redPack/category.vue'),
             meta: {
                 title: '分类管理'
             },
