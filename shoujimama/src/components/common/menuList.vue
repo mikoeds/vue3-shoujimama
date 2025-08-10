@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="main">
+    <div class="mainPart">
         <el-menu unique-opened router max-height="600px" @select="handleSelectRout">
             <menuinner :data="menuStore.menuList"></menuinner>
         </el-menu>
@@ -25,14 +25,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.main {
+.mainPart {
     height: 100vh;
-    width: 250px;
+    width: 300px;
     overflow-y: scroll;
 }
 
 .el-menu {
     width: 100%;
+    height: 100%;
 }
 
 ::-webkit-scrollbar {

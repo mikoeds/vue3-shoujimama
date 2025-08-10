@@ -16,7 +16,7 @@ onMounted(() => {
             <menulist></menulist>
             <div class="flowPart">
                 <flowBar></flowBar>
-                <RouterView></RouterView>
+                <RouterView ></RouterView>
             </div>
         </div>
     </div>
@@ -30,5 +30,12 @@ onMounted(() => {
 
 .flowPart {
     width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    padding-bottom: 20px;
 }
+::-webkit-scrollbar {
+    width: 0px;
+}
+
 </style>

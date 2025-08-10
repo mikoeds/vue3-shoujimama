@@ -1,0 +1,1 @@
+export type dialogStatusType = "none" | "show" | "add" | "edit"
