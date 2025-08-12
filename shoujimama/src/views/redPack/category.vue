@@ -22,8 +22,7 @@ const getFormData = (row: categoryInfoType, status: dialogStatusType, name: stri
     formData.status = row.status;
     formData.is_vajra = row.is_vajra;
     formData.image = row.image;
-    console.log(formData);
-    
+    formData.id = row.id;
 }
 
 </script>

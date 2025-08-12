@@ -31,6 +31,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTableItem: typeof import('element-plus/es')['ElTableItem']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     ElVol: typeof import('element-plus/es')['ElVol']
     Overlay: typeof import('./node_modules/vite-plugin-vue-inspector/src/Overlay.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

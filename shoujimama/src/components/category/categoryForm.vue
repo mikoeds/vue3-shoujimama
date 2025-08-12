@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Delete, Edit, Plus, Refresh, Search, View } from '@element-plus/icons-vue';
 import { onMounted, reactive, ref, defineEmits } from 'vue';
-import { getCategoryInfo } from '../../utiles/api/category';
+import { getCategoryInfo } from '../../utiles/api/mallCategory';
 import type { categoryInfoType, categoryParamType } from '../../types/category';
 import type { dialogStatusType } from '../../types/common';
 
