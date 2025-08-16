@@ -4,5 +4,11 @@ export interface requestResult<T> {
     result: T;
 }
 
+export interface listResult<T> {
+    total: number;
+    data: Array<T>;
+}
+
+
 
 

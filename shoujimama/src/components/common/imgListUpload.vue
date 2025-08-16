@@ -1,4 +1,4 @@
-<!-- 图片上传组件(单图片) -->
+<!-- 图片上传组件(多图片) -->
 <script setup lang="ts">
 import type { UploadRawFile } from 'element-plus';
 import { useUpload } from '../../hooks/uploadHooks';
@@ -11,10 +11,10 @@ interface props {
     acceptList?: Array<string>;
     // 图片大小限制
     limit?: number;
-    imageWidth?: string;
-    imageHeight?: string;
+    imageWidth?: number;
+    imageHeight?: number;
 }
-const imgUrl = defineModel<string>("imgUrl", { required: true })
+const imgList = defineModel<Array<string>>("imgList", { required: true })
 const disableButton = defineModel<boolean>("disableButton", { required: true })
 const loading = defineModel<boolean>("loading", { required: true })
 const { uploadSuccess, uploadFail, imgBeforeupload, uploadData } = useUpload({ disableButton, loading })
@@ -25,7 +25,7 @@ const accepet = acceptList?.join(",")
 const successCallback = (response: uploadSuccessResponsType, file: UploadRawFile) => {
     console.log(response);
     console.log(file);
-    imgUrl.value = "/" + response.key
+    imgList.value.push("/" + response.key);
 }
 // 放大回调
 const dialogShow = ref(false)
@@ -34,14 +34,28 @@ const handleEnlarge = () => {
 }
 
 // 删除回调
-const handleDelet = () => {
-    imgUrl.value = ""
+const handleDelet = (item: string) => {
+    imgList.value.splice(imgList.value.indexOf(item), 1);
 }
 
 </script>
 
 <template>
-    <el-upload :accepet="accepet" :action="UPLOAD_URL" v-if="!imgUrl && !disableButton"
+    <div class="pic-contain" v-for="item in imgList">
+        <img :src="IMG_URL + item" alt="tupian" class="imgShow">
+        <div class="hoverPic">
+            <el-icon class="icon-close" @click="handleEnlarge">
+                <ZoomIn />
+            </el-icon>
+            <el-icon class="icon-close" @click="handleDelet(item)" v-if="!disableButton">
+                <Delete />
+            </el-icon>
+        </div>
+        <el-dialog v-model="dialogShow">
+            <img :src="IMG_URL + item" alt="tupian" class="imgShow">
+        </el-dialog>
+    </div>
+    <el-upload :accepet="accepet" :action="UPLOAD_URL" v-if="!disableButton"
         :on-success="(response: uploadSuccessResponsType, file: UploadRawFile) => uploadSuccess({ response, file, successCallback })"
         :on-error="uploadFail" :data="uploadData"
         :before-upload="(file: UploadRawFile) => imgBeforeupload({ file, limit, fileType: accepet })">
@@ -49,21 +63,6 @@ const handleDelet = () => {
             <Plus />
         </el-icon>
     </el-upload>
-    <div class="pic-contain">
-        <img :src="IMG_URL + imgUrl" alt="tupian" class="imgShow" v-if="imgUrl">
-        <div class="hoverPic" v-if="imgUrl">
-            <el-icon class="icon-close" @click="handleEnlarge">
-                <ZoomIn />
-            </el-icon>
-            <el-icon class="icon-close" @click="handleDelet" v-if="!disableButton">
-                <Delete />
-            </el-icon>
-        </div>
-        <el-dialog v-model="dialogShow">
-            <img :src="IMG_URL + imgUrl" alt="tupian" class="imgShow">
-        </el-dialog>
-    </div>
-
 </template>
 
 <style scoped lang="scss">

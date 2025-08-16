@@ -30,6 +30,14 @@ export const routes: Array<RouteRecordRaw> = [
                 title: '分类管理'
             },
         },
+        {
+            path: 'mallGoodsInfo',
+            name: 'mallGoodsInfo',
+            component: () => import('../views/redPack/mallGoodsInfo.vue'),
+            meta: {
+                title: '商品管理'
+            },
+        },
         ]
     },
     {

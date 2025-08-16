@@ -16,7 +16,7 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped>
+<style>
 .el-card {
     height: 200px;
     width: 400px;

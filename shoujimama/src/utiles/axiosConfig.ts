@@ -72,6 +72,8 @@ function handleAxiosResponseInterceptors(axios: AxiosStatic) {
                 await refreshToken<refreshTokenType, refreshParamType>(refreshParam)
                 .then((response)=>{
                     console.log(response);
+                    localStorage.setItem("accessToken", response.result.accessToken);
+                    localStorage.setItem("refreshToken", response.result.refreshToken);
                 })
             }
         }

@@ -40,7 +40,7 @@ export const useUpload = ({ disableButton, loading }: uploadParamType) => {
     };
 
     // 上传图片预处理回调
-    const beforeupload = async({ file, limit = 500, fileType = ".png,.jpg,.jpeg,.gif", checkBefore, errorCallback }: uploadCheckParamType) => {
+    const imgBeforeupload = async ({ file, limit = 500, fileType = ".png,.jpg,.jpeg,.gif", checkBefore, errorCallback }: uploadCheckParamType) => {
         disableButton.value = true;
         loading.value = true;
         // 自定义检查
@@ -84,9 +84,49 @@ export const useUpload = ({ disableButton, loading }: uploadParamType) => {
         // 获取上传参数
         return getUploadParams(suffix);
     }
+    // 上传视频预处理回调
+    const videaBeforeupload = async ({ file, limit = 10, checkBefore, errorCallback }: uploadCheckParamType) => {
+        disableButton.value = true;
+        loading.value = true;
+        // 自定义检查
+        if (checkBefore) {
+            if (!checkBefore(file)) {
+                disableButton.value = false;
+                loading.value = false;
+                return false
+            }
+        }
+
+        // 视频大小限制
+        if (file.size / 1024 /1024 > limit) {
+            ElMessage.warning(`请上传大小不超过${{ limit }}MB的文件`)
+            disableButton.value = false;
+            loading.value = false;
+            if (errorCallback) {
+                errorCallback(file);
+            }
+            return false;
+        }
+        // 图片类型限制
+        if (!/\/(mp4|avi|quicktime)$/i.test(file.type)) {
+            ElMessage.warning(`请上传视频类型文件(mp4,avi)`)
+            disableButton.value = false;
+            loading.value = false;
+            if (errorCallback) {
+                errorCallback(file);
+            }
+            return false;
+        }
+
+        // 获取文件后缀
+        const suffix = file.type.split("/")[1];
+
+        // 获取上传参数
+        return getUploadParams(suffix);
+    }
 
     // 获取上传参数（参数为后缀名,闭包确定参数）
-    const getUploadParams = async(data: string) => {
+    const getUploadParams = async (data: string) => {
         return getUploadToken<uploadTokenResponsType, uploadTokenParamType>({ suffix: data }).then(res => {
             uploadData.token = res.result.upToken;
             uploadData.key = res.result.fileName[0];
@@ -95,9 +135,12 @@ export const useUpload = ({ disableButton, loading }: uploadParamType) => {
         })
     }
 
-    return { uploadSuccess, 
-        uploadFail, 
-        beforeupload, 
+    return {
+        uploadSuccess,
+        uploadFail,
+        imgBeforeupload,
+        videaBeforeupload,
         //  返回一个方法保证数据时效性及防止外部修改
-        uploadData : () => uploadData }
+        uploadData: () => uploadData
+    }
 }

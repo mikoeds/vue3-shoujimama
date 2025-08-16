@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Delete, Edit, Plus, Refresh, Search, View } from '@element-plus/icons-vue';
-import { onMounted, reactive, ref, defineEmits } from 'vue';
-import { getCategoryInfo } from '../../utiles/api/mallCategory';
+import { onMounted, reactive, ref, defineEmits, useTemplateRef } from 'vue';
+import { deletCategoryInfo, getCategoryInfo } from '../../utiles/api/mallCategory';
 import type { categoryInfoType, categoryParamType } from '../../types/category';
 import type { dialogStatusType } from '../../types/common';
+import { ElMessage } from 'element-plus';
 
 let pageSize = ref(10)
 let pageNumber = ref(1)
@@ -24,7 +25,8 @@ const handleJinggangShow = (data: categoryInfoType) => {
 
 // 获得分类信息
 const handleGetCategoryInfo = async () => {
-    await getCategoryInfo<Array<categoryInfoType>, categoryParamType>().then((res) => {
+    await getCategoryInfo<Array<categoryInfoType>, categoryParamType>({ name: searchData.value }).then((res) => {
+        categoryList = [];
         categoryList.push(...res.result);
         total.value = res.result.length;
     });
@@ -42,6 +44,7 @@ const pageSizeChang = (val: number) => {
 // 新增回调
 const handleDiaologAdd = () => {
     dialogStatus.value = "add";
+    handleGetCategoryInfo();
 }
 
 // 查看回调
@@ -56,7 +59,47 @@ const handleDialogEdit = (row: categoryInfoType) => {
     emit("getFormData", row, "edit", row.name)
 
 }
+
+// 删除方法
+const handleDelete = (idArray: Array<number>) => {
+    deletCategoryInfo({ idArray }).then((res) => {
+        console.log(res);
+        for (const data of idArray) {
+            categoryList.splice(categoryList.findIndex(item => item.id === data), 1);
+        }
+    })
+}
 // 删除回调
+const handleDialogDelet = (row: categoryInfoType) => {
+    handleDelete([row.id]);
+}
+// 批量删除
+let tableRef = useTemplateRef("tableRef")
+const handleDeletChosen = () => {
+    const deleteList: Array<categoryInfoType> = tableRef.value!.store.states.selection.value;
+    if (deleteList.length === 0) {
+        ElMessage.warning("请选择分类");
+        return;
+    }
+    let deleteIdArry = [];
+    for (const item of deleteList) {
+        deleteIdArry.push(item.id)
+    }
+    handleDelete(deleteIdArry);
+}
+
+// 搜索回调
+const searchData = ref("")
+const handleSearch = () => {
+    handleGetCategoryInfo();
+    pageChang(1);
+}
+// 搜索回调
+const handleReset = () => {
+    searchData.value = ""
+    handleGetCategoryInfo();
+    pageChang(1);
+}
 
 onMounted(async () => {
     handleGetCategoryInfo();
@@ -69,19 +112,19 @@ onMounted(async () => {
             咨询条件：
         </div>
         <div class="max">
-            <el-input></el-input>
-            <el-button type="success" :icon="Search">搜索</el-button>
-            <el-button type="warning" :icon="Refresh">重置</el-button>
+            <el-input v-model="searchData" palceholder="请输入分类名称"></el-input>
+            <el-button type="success" :icon="Search" @click="handleSearch">搜索</el-button>
+            <el-button type="warning" :icon="Refresh" @click="handleReset">重置</el-button>
         </div>
         <div class="max">
             咨询结果
         </div>
         <div class="max">
             <el-button type="primary" :icon="Plus" @click="handleDiaologAdd">新增</el-button>
-            <el-button type="danger" :icon="Delete">批量删除</el-button>
+            <el-button type="danger" :icon="Delete" @click="handleDeletChosen">批量删除</el-button>
         </div>
 
-        <el-table border :data="categoryList.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)">
+        <el-table border :data="categoryList.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)" ref="tableRef">
             <el-table-column type="index"></el-table-column>
             <el-table-column type="selection"></el-table-column>
             <el-table-column label="分类名称" prop="name"></el-table-column>
@@ -92,7 +135,7 @@ onMounted(async () => {
                 <template #default="scope">
                     <el-button type="primary" link :icon="View" @click="handleDialogShow(scope.row)">查看</el-button>
                     <el-button type="primary" link :icon="Edit" @click="handleDialogEdit(scope.row)">编辑</el-button>
-                    <el-button type="danger" link :icon="Delete">删除</el-button>
+                    <el-button type="danger" link :icon="Delete" @click="handleDialogDelet(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

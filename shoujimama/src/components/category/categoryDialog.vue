@@ -59,7 +59,7 @@ const handleSubmit = () => {
         
         addCategoryInfo(method.value, formData.value).then(res => {
             ElMessage.success(res.msg);
-
+            dialogStatus.value = "none";
         })
     };
 }
@@ -118,7 +118,6 @@ watch(dialogStatus, (newval) => {
             <el-form-item label="图片：">
                 <imgUpload v-model:img-url="formData.image" v-model:disable-button="disabled" v-model:loading="loading">
                 </imgUpload>
-                {{ formData }}
             </el-form-item>
             <el-row>
                 <el-button v-if="!disabled" @click="handleSubmit">保存</el-button>

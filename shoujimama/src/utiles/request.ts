@@ -103,3 +103,34 @@ export const jsonRequest = <T, D = undefined>(url: string, data: D, method:strin
         })
     })
 }
+
+/**
+ * DELETE公共请求
+ * @param {*} url 请求地址
+ * @param {*} data 请求参数
+ */
+export const deletRequest = <T, D>(url: string, params: D) => {
+    return new Promise<requestResult<T>>((resolve, reject) => {
+        axios({
+            method: "DELETE",
+            url,
+            params
+        }).then((response) => {
+            console.log(response);
+            
+            if (response.status !== 200) {
+                reject(response)
+            }
+            else {
+                if (response.data.status === 0) {
+                    reject(response.data.msg)
+                } else {
+                    resolve(response.data)
+                }
+            }
+            resolve(response.data)
+        }).catch((error) => {
+            reject(error)
+        })
+    })
+}

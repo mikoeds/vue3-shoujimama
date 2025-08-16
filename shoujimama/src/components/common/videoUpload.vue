@@ -1,4 +1,4 @@
-<!-- 图片上传组件(单图片) -->
+<!-- 视频上传组件 -->
 <script setup lang="ts">
 import type { UploadRawFile } from 'element-plus';
 import { useUpload } from '../../hooks/uploadHooks';
@@ -7,25 +7,23 @@ import type { uploadSuccessResponsType } from '../../types/upload';
 import { ref } from 'vue';
 
 interface props {
-    // 图片类型限制列表
-    acceptList?: Array<string>;
-    // 图片大小限制
+    // 视频大小限制
     limit?: number;
-    imageWidth?: string;
-    imageHeight?: string;
+    videoWidth?: number;
+    videoHeight?: number;
 }
-const imgUrl = defineModel<string>("imgUrl", { required: true })
+const videoUrl = defineModel<string>("vidUrl", { required: true })
 const disableButton = defineModel<boolean>("disableButton", { required: true })
 const loading = defineModel<boolean>("loading", { required: true })
-const { uploadSuccess, uploadFail, imgBeforeupload, uploadData } = useUpload({ disableButton, loading })
-const { acceptList = [".png", ".jpg", ".jpeg", ".gif"], limit, imageWidth, imageHeight } = defineProps<props>()
-const accepet = acceptList?.join(",")
+const { uploadSuccess, uploadFail, videaBeforeupload, uploadData } = useUpload({ disableButton, loading })
+const { limit, videoWidth, videoHeight } = defineProps<props>()
+const accepet = "mp4,avi"
 
 // 上传成功回调
 const successCallback = (response: uploadSuccessResponsType, file: UploadRawFile) => {
     console.log(response);
     console.log(file);
-    imgUrl.value = "/" + response.key
+    videoUrl.value = "/" + response.key
 }
 // 放大回调
 const dialogShow = ref(false)
@@ -35,23 +33,29 @@ const handleEnlarge = () => {
 
 // 删除回调
 const handleDelet = () => {
-    imgUrl.value = ""
+    videoUrl.value = ""
+}
+
+// dialog关闭回调
+const videoDialog = ref<HTMLVideoElement | null>(null)
+const handleDialogClose = () => {
+    videoDialog.value?.pause();
 }
 
 </script>
 
 <template>
-    <el-upload :accepet="accepet" :action="UPLOAD_URL" v-if="!imgUrl && !disableButton"
+    <el-upload :accepet="accepet" :action="UPLOAD_URL" v-if="!videoUrl && !disableButton"
         :on-success="(response: uploadSuccessResponsType, file: UploadRawFile) => uploadSuccess({ response, file, successCallback })"
         :on-error="uploadFail" :data="uploadData"
-        :before-upload="(file: UploadRawFile) => imgBeforeupload({ file, limit, fileType: accepet })">
+        :before-upload="(file: UploadRawFile) => videaBeforeupload({ file, limit })">
         <el-icon class="uploader-icon">
             <Plus />
         </el-icon>
     </el-upload>
-    <div class="pic-contain">
-        <img :src="IMG_URL + imgUrl" alt="tupian" class="imgShow" v-if="imgUrl">
-        <div class="hoverPic" v-if="imgUrl">
+    <div class="vid-contain" v-if="videoUrl">
+        <video :src="IMG_URL + videoUrl" class="vidShow" ></video>
+        <div class="hoverVideo">
             <el-icon class="icon-close" @click="handleEnlarge">
                 <ZoomIn />
             </el-icon>
@@ -59,32 +63,34 @@ const handleDelet = () => {
                 <Delete />
             </el-icon>
         </div>
-        <el-dialog v-model="dialogShow">
-            <img :src="IMG_URL + imgUrl" alt="tupian" class="imgShow">
+        <el-dialog v-model="dialogShow" @closed="handleDialogClose">
+            <video :src="IMG_URL + videoUrl" class="vidShow" controls ref="videoDialog"></video>
         </el-dialog>
     </div>
 
 </template>
 
 <style scoped lang="scss">
-.pic-contain {
-    $imageWidth: v-bind('imageWidth + "px"');
-    $imageHeight: v-bind('imageHeight + "px"');
-    $imageLineHeight: v-bind('imageHeight + "px"');
-    width: $imageWidth;
-    height: $imageHeight;
+.vid-contain {
+    $videoWidth: v-bind('videoWidth + "px"');
+    $videoHeight: v-bind('videoHeight + "px"');
+    $videoLineHeight: v-bind('videoHeight + "px"');
+    width: $videoWidth;
+    height: $videoHeight;
     position: relative;
 
-    .imgShow {
+
+
+    .vidShow {
         width: 100%;
         height: 100%;
     }
 
-    &:hover .hoverPic {
+    &:hover .hoverVideo {
         opacity: 50%;
     }
 
-    .hoverPic {
+    .hoverVideo {
         width: 100%;
         height: 100%;
         position: absolute;

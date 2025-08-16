@@ -22,7 +22,7 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped>
+<style>
 .mainpart {
     scroll-behavior: auto;
     display: flex;
