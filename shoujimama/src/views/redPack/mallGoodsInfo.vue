@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import serachTable from '../../components/mallGoods/serachTable.vue';
 import mallInfo from '../../components/mallGoods/mallInfo.vue';
+import { ref } from 'vue';
+import type { categoryInfoType } from '../../types/category';
+import type { dictDataType } from '../../types/dic.t';
+import type { deliverDataType } from '../../types/deliver';
+
+const id = ref(0);
+const categoryClassList = ref<Array<categoryInfoType>>([]);
+const categoryStatusList = ref<Array<dictDataType>>([]);
+const platformList = ref<Array<dictDataType>>([]);
+const isUseNoList = ref<Array<dictDataType>>([]);
+const freightTemplateList = ref<Array<deliverDataType>>([]);
 </script>
 
 <template>
@@ -13,7 +24,14 @@ import mallInfo from '../../components/mallGoods/mallInfo.vue';
             </el-tab-pane>
             <el-tab-pane label="商品详情" name="two">
                 <el-card class="tab-content">
-                    <mallInfo></mallInfo>
+                    <mallInfo
+                    :category-class-list="categoryClassList"
+                    :category-status-list="categoryStatusList"
+                    :freight-template-list="freightTemplateList"
+                    :platform-list="platformList"
+                    :is-use-no-list="isUseNoList"
+                    :id="id"
+                    ></mallInfo>
                 </el-card>
             </el-tab-pane>
         </el-tabs>

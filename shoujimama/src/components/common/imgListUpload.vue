@@ -4,7 +4,7 @@ import type { UploadRawFile } from 'element-plus';
 import { useUpload } from '../../hooks/uploadHooks';
 import { IMG_URL, UPLOAD_URL } from '../../utiles/config';
 import type { uploadSuccessResponsType } from '../../types/upload';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface props {
     // 图片类型限制列表
@@ -14,12 +14,12 @@ interface props {
     imageWidth?: number;
     imageHeight?: number;
 }
-const imgList = defineModel<Array<string>>("imgList", { required: true })
-const disableButton = defineModel<boolean>("disableButton", { required: true })
-const loading = defineModel<boolean>("loading", { required: true })
-const { uploadSuccess, uploadFail, imgBeforeupload, uploadData } = useUpload({ disableButton, loading })
-const { acceptList = [".png", ".jpg", ".jpeg", ".gif"], limit, imageWidth, imageHeight } = defineProps<props>()
-const accepet = acceptList?.join(",")
+const imgList = defineModel<Array<string>>("imgList", { required: true });
+const disableButton = defineModel<boolean>("disableButton", { required: true });
+const loading = defineModel<boolean>("loading", { required: true });
+const { uploadSuccess, uploadFail, imgBeforeupload, uploadData } = useUpload({ disableButton, loading });
+const { acceptList = [".png", ".jpg", ".jpeg", ".gif"], limit, imageWidth, imageHeight } = defineProps<props>();
+const accepet = acceptList?.join(",");
 
 // 上传成功回调
 const successCallback = (response: uploadSuccessResponsType, file: UploadRawFile) => {

@@ -14,7 +14,16 @@ export interface uploadDataType {
     /** 资源在七牛云存储的唯一标识key */
     key: string;
 }
-// 上传请求参数leix
+
+// 图片上传参数类型
+export interface uploadImgDataType {
+    file:File;
+    /** 七牛云上传授权令牌 */
+    token: string;
+    /** 资源在七牛云存储的唯一标识key */
+    key: string;
+}
+// 上传请求参数类型
 export interface uploadTokenParamType {
     /** 文件后缀名（如：png/mp4） */
     suffix: string;
