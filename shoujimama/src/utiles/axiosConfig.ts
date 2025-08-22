@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse, type AxiosStatic, type InternalAxiosRequestConfig } from "axios"
-import { AUTHORIZATION, WHITE_LIST } from "./config"
+import { AUTHORIZATION, REFRESH_TOKEN, WHITE_LIST } from "./config"
 import { ref } from "vue";
 import { refreshToken } from "./api/login";
 import type { refreshParamType, refreshTokenType } from "../types/login";
@@ -14,6 +14,9 @@ export const axiosConfig = () => {
 
 // 请求列表，解决重复请求问题
 const requestMap: Map<string, AbortController> = new Map();
+
+// 重载队列
+let requestList: Array<() => void> = [];
 
 // 请求、响应拦截器具体实现
 function handleAxiosRequestInterceptors(axios: AxiosStatic) {
@@ -67,15 +70,20 @@ function handleAxiosResponseInterceptors(axios: AxiosStatic) {
         }
         if (response.data.status === 2) {
             if (!refreshing) {
-                refreshParam.refreshToken = localStorage.getItem("refreshToken") || ""
+                refreshParam.refreshToken = localStorage.getItem(REFRESH_TOKEN) || ""
                 refreshing = true;
                 await refreshToken<refreshTokenType, refreshParamType>(refreshParam)
-                .then((response)=>{
-                    console.log(response);
-                    localStorage.setItem("accessToken", response.result.accessToken);
-                    localStorage.setItem("refreshToken", response.result.refreshToken);
-                })
+                    .then((response) => {
+                        console.log(response);
+                        localStorage.setItem(AUTHORIZATION, response.result.accessToken);
+                        localStorage.setItem(REFRESH_TOKEN, response.result.refreshToken);
+                        requestList.forEach(request => request());
+                        requestList = [];
+                        refreshing = false
+                    })
+                return axios.request(response.config);
             }
+
         }
         // 错误处理
         return response

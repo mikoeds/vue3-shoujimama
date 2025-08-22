@@ -31,3 +31,8 @@ export interface mallGoodsParamType {
     update_specs?: IUpdateSpecs[]; // 根据业务需要定义具体类型
     is_goods_no: string; // 商品编号标识
 }
+
+export interface changeGoodStatusParamType {
+    idArray:Array<number>;
+    status:string;
+}
