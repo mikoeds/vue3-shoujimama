@@ -38,6 +38,14 @@ export const routes: Array<RouteRecordRaw> = [
                 title: '商品管理'
             },
         },
+        {
+            path: 'redEnvelopeRush',
+            name: 'redEnvelopeRush',
+            component: () => import('../views/redPack/activity/redEnvelopeRush.vue'),
+            meta: {
+                title: '红包抢购'
+            },
+        },
         ]
     },
     {

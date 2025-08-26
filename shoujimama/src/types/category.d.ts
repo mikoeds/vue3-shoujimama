@@ -29,8 +29,8 @@ export interface mallGoodsResponsType {
   goods_name: string;
   goods_no: string;
   id: number;
-  official_price: string;
-  red_packet_price: string;
+  official_price: number;
+  red_packet_price: number;
   retail_price: string;
   sales_initial: number;
   sort: number;
