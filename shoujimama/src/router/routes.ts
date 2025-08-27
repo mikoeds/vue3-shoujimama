@@ -46,6 +46,14 @@ export const routes: Array<RouteRecordRaw> = [
                 title: '红包抢购'
             },
         },
+        {
+            path: 'strictlySelectSpecial',
+            name: 'strictlySelectSpecial',
+            component: () => import('../views/redPack/activity/selectSpecial.vue'),
+            meta: {
+                title: '严选专场'
+            },
+        },
         ]
     },
     {

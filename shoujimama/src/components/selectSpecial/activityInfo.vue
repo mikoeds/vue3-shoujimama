@@ -2,12 +2,13 @@
 import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import { statusManage } from '../../hooks/stateChange';
 import imgUpload from '../common/imgUpload.vue';
-import type { categoryInfoType, mallGoodsResponsType } from '../../types/category';
-import { addMallRedEnvelopeGood, getMallRedEnvelopemoreInfo } from '../../utiles/api/mallRedEnvelope';
-import type { IMallRedPacketPurchaseInfoList } from '../../types/redEnvelopeRush';
+import type { mallGoodsResponsType } from '../../types/category';
+import { addMallRedEnvelopeGood } from '../../utiles/api/mallRedEnvelope';
 import { IMG_URL } from '../../utiles/config';
 import { Delete } from '@element-plus/icons-vue';
 import mallGoodAddDialog from '../mallGoods/mallGoodAddDialog.vue';
+import { getActivityMoreInfo } from '../../utiles/api/selectSpecial';
+import type { activityMoreInfoType } from '../../types/selectSpecial';
 
 
 const { loading, disableButton, statusChange } = statusManage();
@@ -20,32 +21,29 @@ const formRef = useTemplateRef('formRef')
 type status = "none" | "show" | "edit" | "add";
 
 const formStatus = defineModel<status>("formStatus");
-const formData = defineModel<categoryInfoType>("formData", { required: true });
 const id = defineModel<number>("id", { required: true });
-let moreInfoData = reactive<IMallRedPacketPurchaseInfoList>({
+let moreInfoData = reactive<activityMoreInfoType>({
     goods_list: [],
     id: 0,
     name: '',
     image: '',
-    start_time: '',
-    end_time: '',
-    status: 0
+    status: 0,
+    create_time: '',
+    index_image: ''
 })
 
 // 获取选中活动的详情信息
 const getMoreInfo = async (id: number) => {
     statusChange(true);
-    await getMallRedEnvelopemoreInfo<IMallRedPacketPurchaseInfoList, { id: number }>(id, { id }).then(res => {
+    await getActivityMoreInfo<activityMoreInfoType, { id: number }>(id, { id }).then(res => {
         console.log(res);
         moreInfoData.goods_list = res.result.goods_list;
         moreInfoData.name = res.result.name;
         moreInfoData.id = res.result.id;
         moreInfoData.image = res.result.image;
-        moreInfoData.start_time = new Date(res.result.start_time).valueOf() / 1000;
-        moreInfoData.end_time = new Date(res.result.end_time).valueOf() / 1000;
         moreInfoData.status = res.result.status;
-        dateArray.value.push(moreInfoData.start_time);
-        dateArray.value.push(moreInfoData.end_time);
+        moreInfoData.index_image = res.result.index_image;
+
     }).catch().finally(() => {
         statusChange(false);
     })
@@ -84,14 +82,8 @@ const initFormData = () => {
 
 // 提交回调
 const submit = (method: string) => {
-    moreInfoData.start_time = dateArray.value[0];
-    moreInfoData.end_time = dateArray.value[1];
-    moreInfoData.id = formData.value.id;
-    moreInfoData.name = formData.value.name;
-    moreInfoData.image = formData.value.image;
-    moreInfoData.status = formData.value.status;
     statusChange(true);
-    addMallRedEnvelopeGood<string, IMallRedPacketPurchaseInfoList>(moreInfoData, method).then(res => {
+    addMallRedEnvelopeGood<string, activityMoreInfoType>(moreInfoData, method).then(res => {
         formStatus.value = "none";
         emit("successSubmit")
     }).catch().finally(() => {
@@ -125,35 +117,26 @@ onMounted(() => {
 
 <template>
     <div>
-        {{ moreInfoData }}
-        <el-form label-width="150px" v-loading="loading" :model="formData" :disabled="formDisabled" ref="formRef">
+        <el-form label-width="150px" v-loading="loading" :model="moreInfoData" :disabled="formDisabled" ref="formRef">
             <el-divider content-position="left">基本信息</el-divider>
             <el-row :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="活动名称" prop="name">
-                        <el-input v-model.trim="formData.name"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="是否开始活动" prop="status">
-                        <el-switch v-model.trim="formData.status" active-text="开启" inactive-text="关闭" :active-value="1"
-                            :inactive-value="0"></el-switch>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="10">
-                <el-col :span="10">
-                    <el-form-item label="活动时间" prop="cost_price">
-                        <el-date-picker v-model="dateArray" type="datetimerange" range-separator="至"
-                            format="YYYY-MM-DD HH:mm:ss" value-format="X" start-placeholder="开始时间"
-                            end-placeholder="结束时间"></el-date-picker>
+                        <el-input v-model.trim="moreInfoData.name"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="商品主图" prop="image">
-                        <imgUpload v-model:disable-button="formDisabled" v-model:img-url="formData.image"
+                    <el-form-item label="首页图" prop="image">
+                        <imgUpload v-model:disable-button="formDisabled" v-model:img-url="moreInfoData.index_image"
+                            v-model:loading="loading">
+                        </imgUpload>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="主图" prop="image">
+                        <imgUpload v-model:disable-button="formDisabled" v-model:img-url="moreInfoData.image"
                             v-model:loading="loading">
                         </imgUpload>
                     </el-form-item>
@@ -177,34 +160,34 @@ onMounted(() => {
                                     <img :src="IMG_URL + scope.row.goods_image" alt="tupian" style="width: 100px;">
                                 </template>
                             </el-table-column>
-                            <el-table-column label="商品名称" align="center" prop="title">
+                            <el-table-column label="商品名称" align="center" prop="goods_name">
                                 <template #default="scope">
-                                    <el-input v-model="scope.row.title"></el-input>
+                                    <el-input v-model="scope.row.goods_name"></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="副标题" align="center" prop="subtitle">
+                            <el-table-column label="零售价" align="official_price" prop="subtitle">
                                 <template #default="scope">
-                                    <el-input v-model="scope.row.subtitle"></el-input>
+                                    <el-input v-model="scope.row.official_price"></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="活动商品数量" align="center" prop="stock">
-                                <template #default="scope">
-                                    <el-input v-model="scope.row.stock"></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="需付红包" align="center" prop="red_packet_price">
+                            <el-table-column label="最多可抵扣红包" align="center" prop="red_packet_price">
                                 <template #default="scope">
                                     <el-input v-model="scope.row.red_packet_price"></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="淘宝价" align="center" prop="retail_price">
+                                <template #default="scope">
+                                    <el-input v-model="scope.row.retail_price"></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="已售数量" align="center" prop="sales_actual">
+                                <template #default="scope">
+                                    <el-input v-model="scope.row.sales_actual"></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column label="排序" align="center" prop="sort">
                                 <template #default="scope">
                                     <el-input v-model="scope.row.sort"></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="已售数量" align="center" prop="sales">
-                                <template #default="scope">
-                                    <el-input v-model="scope.row.sales"></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center">
