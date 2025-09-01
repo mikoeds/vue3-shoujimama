@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef, watch } from 'vue';
-import searchTable from '../../../components/selectSpecial/searchTable.vue';
-import activityInfo from '../../../components/selectSpecial/activityInfo.vue';
-import type { activityInfoType } from '../../../types/selectSpecial';
+import type { activityInfoType } from '../../types/selectSpecial';
+import searchTable from '../../components/freighTemplate/searchTable.vue';
+import freighTemplateInfo from '../../components/freighTemplate/freighTemplateInfo.vue';
 
 const tabStatus = ref("one");
 const id = ref(0);
 type status = "add" | "show" | "edit" | "none"
 const dialogStatus = ref<status>("none");
 
-const searchRef = useTemplateRef("searchRef")
 
 // 接收列表数据
 const getTableData = (data:activityInfoType) => {
@@ -18,7 +17,7 @@ const getTableData = (data:activityInfoType) => {
 
 // 成功上传回调
 const successSubmit = () => {
-    searchRef.value?.handleGetInfo();
+
 }
 
 // 监视表单状态
@@ -42,29 +41,27 @@ watch(tabStatus, (newStatus) => {
 <template>
     <div class="tabs">
         <el-tabs v-model="tabStatus">
-            <el-tab-pane label="严选专场列表" name="one">
+            <el-tab-pane label="运费模板列表" name="one">
                 <el-card class="tab-content">
                     <searchTable
                     v-model:dialog-status="dialogStatus"
                     @get-form-data="getTableData"
-                    ref="searchRef"
                     ></searchTable>
                 </el-card>
             </el-tab-pane>
-            <el-tab-pane label="严选专场详情" name="two">
+            <el-tab-pane label="运费模板详情" name="two">
                 <el-card class="tab-content">
-                    <activityInfo
-                    v-model:form-status="dialogStatus"
+                    <freighTemplateInfo
                     v-model:id="id"
-                    @success-submit="successSubmit"
-                    ></activityInfo>
+                    v-model:form-status="dialogStatus"
+                    ></freighTemplateInfo>
                 </el-card>
             </el-tab-pane>
         </el-tabs>
     </div>
 </template>
 
-<style>
+<style scoped>
 .tabs {
     margin-left: 5px;
     margin-right: 5px;

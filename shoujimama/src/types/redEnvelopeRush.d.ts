@@ -16,7 +16,7 @@ interface IMallRedPacketPurchaseList {
 }
 
 /* 详细数据列表类型 */
-interface IMallRedPacketPurchasemoreList {
+export interface IMallRedPacketPurchasemoreList {
   goods_id: number;
   goods_image: string;
   official_price: number;
@@ -30,6 +30,6 @@ interface IMallRedPacketPurchasemoreList {
 
 
 /* 请求详细活动数据返回类型 */
-interface IMallRedPacketPurchaseInfoList extends IMallRedPacketPurchaseList {
+export interface IMallRedPacketPurchaseInfoList extends IMallRedPacketPurchaseList {
   goods_list: Array<IMallRedPacketPurchasemoreList>;
 }

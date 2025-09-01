@@ -3,19 +3,16 @@ import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import { statusManage } from '../../hooks/stateChange';
 import imgUpload from '../common/imgUpload.vue';
 import type { mallGoodsResponsType } from '../../types/category';
-import { addMallRedEnvelopeGood } from '../../utiles/api/mallRedEnvelope';
 import { IMG_URL } from '../../utiles/config';
 import { Delete } from '@element-plus/icons-vue';
 import mallGoodAddDialog from '../mallGoods/mallGoodAddDialog.vue';
-import { getActivityMoreInfo } from '../../utiles/api/selectSpecial';
+import { addActivityInfo, getActivityMoreInfo } from '../../utiles/api/selectSpecial';
 import type { activityMoreInfoType } from '../../types/selectSpecial';
-
 
 const { loading, disableButton, statusChange } = statusManage();
 const formDisabled = ref(false);
 const dialogShow = ref(false);
 const method = ref("POST");
-const dateArray = ref<Array<number>>([]);
 const emit = defineEmits(["successSubmit"]);
 const formRef = useTemplateRef('formRef')
 type status = "none" | "show" | "edit" | "add";
@@ -61,12 +58,13 @@ const selectConfirm = (itemArray: Array<mallGoodsResponsType>) => {
             goods_id: item.id,
             goods_image: item.goods_image,
             official_price: item.official_price,
+            retail_price: item.retail_price,
             red_packet_price: item.red_packet_price,
-            sales: 0,
+            sales_actual: 0,
             sort: 0,
-            stock: 0,
-            subtitle: '',
-            title: item.goods_name
+            goods_name: item.goods_name,
+            sales_initial: item.sales_initial,
+            stock_total: item.stock_total
         })
     };
     dialogShow.value = false;
@@ -77,13 +75,14 @@ const initFormData = () => {
     formRef.value.resetFields();
     moreInfoData.goods_list = [];
     moreInfoData.id = 0;
+    moreInfoData.index_image = "";
     method.value = "POST";
 }
 
 // 提交回调
 const submit = (method: string) => {
     statusChange(true);
-    addMallRedEnvelopeGood<string, activityMoreInfoType>(moreInfoData, method).then(res => {
+    addActivityInfo<string, activityMoreInfoType>(moreInfoData, method).then(() => {
         formStatus.value = "none";
         emit("successSubmit")
     }).catch().finally(() => {
@@ -113,6 +112,7 @@ watch(formStatus, async newStatus => {
 onMounted(() => {
 
 })
+
 </script>
 
 <template>
@@ -165,7 +165,7 @@ onMounted(() => {
                                     <el-input v-model="scope.row.goods_name"></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="零售价" align="official_price" prop="subtitle">
+                            <el-table-column label="零售价" align="official_price" prop="official_price">
                                 <template #default="scope">
                                     <el-input v-model="scope.row.official_price"></el-input>
                                 </template>

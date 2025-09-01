@@ -54,6 +54,14 @@ export const routes: Array<RouteRecordRaw> = [
                 title: '严选专场'
             },
         },
+        {
+            path: 'freighTemplate',
+            name: 'freighTemplate',
+            component: () => import('../views/redPack/freighTemplate.vue'),
+            meta: {
+                title: '运费模板'
+            },
+        },
         ]
     },
     {
